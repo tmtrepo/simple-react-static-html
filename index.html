@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='UTF-8'>
+    <script crossorigin src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+    <div id='root'></div>
+
+    <script type='text/babel'>
+        const { Component } = React;
+
+         const App = () => (
+          <FirstComp/>
+         )
+
+         const Cryptos = ({ cryptos }) => {
+                 return (
+                   <div>
+                     <center><h1>Crypto Price - 24 hr</h1></center>
+                     {cryptos.map((crypto) => (
+                     <div>
+                       <div><h3>{crypto.symbol}</h3> High -  {crypto.highPrice} , Low -  {crypto.lowPrice}</div>
+                    </div>
+                     ))}
+                   </div>
+                 )
+           };
+
+         class FirstComp extends Component {
+             state = {
+               prices: []
+             }
+             async componentDidMount() {
+               var values=await get_crypto();
+               this.setState({ prices: values })
+             }
+             render() {
+                 return (
+                 <Cryptos cryptos={this.state.prices} />
+                 );
+               }
+         };
+         async function get_crypto(){
+           const res = await fetch('https://api2.binance.com/api/v3/ticker/24hr');
+           return await res.json();
+           }
+         ReactDOM.render(<App />, document.querySelector('#root'));
+
+    </script>
+
+</body>
+
+</html>
